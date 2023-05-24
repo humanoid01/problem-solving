@@ -96,3 +96,37 @@ activitySelection([
   { start: 5, end: 7 },
   { start: 8, end: 9 },
 ]);
+
+/*
+Problem: Coin Change 
+Given a set of coin denominations and a target amount, find the minimum number of coins needed to make the change.
+Input:
+Coins: [1, 5, 10, 25]
+Target amount: 36
+Output:
+Minimum number of coins: 3
+Explanation:
+The minimum number of coins needed to make 36 cents is 3: two 10-cent coins and one 5-cent coin.
+*/
+
+const coinChange = (coins: number[], target: number): number => {
+  // We sort coins in descending order to start from the biggest ones
+  const sortedCoins = [...coins].sort((a, b) => b - a);
+  let remainingTarget = target;
+  let numberOfCoins = 0;
+  // now we need to iterate untill our target is not zero
+  while (remainingTarget !== 0) {
+    // iterate through coins and check if current coin has lower or equal value than remaningTarget
+    // if yes, we must increment no. coins and subtract current coin from remainingTarget
+    for (const coin of sortedCoins) {
+      if (coin <= remainingTarget) {
+        remainingTarget -= coin;
+        numberOfCoins += 1;
+        break;
+        //lil' break for that 0.0000000000000001s performance boost
+      }
+    }
+  }
+  return numberOfCoins;
+};
+console.log(coinChange([1, 5, 10, 25], 36));
