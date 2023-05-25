@@ -129,4 +129,47 @@ const coinChange = (coins: number[], target: number): number => {
   }
   return numberOfCoins;
 };
-console.log(coinChange([1, 5, 10, 25], 36));
+coinChange([1, 5, 10, 25], 36);
+
+/*
+Problem: Maximum Product Subarray
+Given an array that contains both positive and negative integers, find the product of the maximum product subarray. 
+
+Examples:
+
+Input: arr[] = {6, -3, -10, 0, 2}
+Output:   180  // The subarray is {6, -3, -10}
+
+Input: arr[] = {-1, -3, -10, 0, 60}
+Output:   60  // The subarray is {60}
+*/
+
+const maximumProductSubarr = (numbers: number[]): number => {
+  // let max be -Inf, because anything will be bigger than it
+  let max = -Infinity;
+  // and let currentProduct be 1, because anything but zero multiplied by 1 will give us exactly that number.
+  let currentProduct = 1;
+  // let's iterate through our array, we can't sort it in this case because we can't mutate our input.
+  for (const number of numbers) {
+    // if product from our previous iteration is zero, that means that we encountered an zero and we need to assign current number to our current product
+    if (currentProduct === 0) {
+      currentProduct = number;
+      // in case that's the last element in the array
+      max = Math.max(currentProduct, max);
+      // continue keyword is there so we won't multiply current product by itself later
+      continue;
+    }
+
+    currentProduct *= number;
+    max = Math.max(currentProduct, max);
+  }
+
+  return max;
+};
+// Again this algorithm will give us mostly right answers but there are exceptions where the output will not be correct.
+// For this example: [-1, -2, -3, -4, -5], output will be 24, instead of 120, becase on last iteration with greedy approach we will get -120 and 24>-120, so we will get that as an answer.
+// We could change it with brute force approach, iterating through current element and then through every other element is the nested loop.
+// That would ensure that we iterate through even number of smaller negative numbers, which would give us bigger product at the end.
+// console.log(maximumProductSubarr([6, -3, -10, 0, 2])); // 180
+// console.log(maximumProductSubarr([-1, -3, -10, 0, 60])); // 60
+console.log(maximumProductSubarr([-7, -10, 0, 60])); // 60
