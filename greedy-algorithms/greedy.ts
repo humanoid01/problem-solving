@@ -172,4 +172,95 @@ const maximumProductSubarr = (numbers: number[]): number => {
 // That would ensure that we iterate through even number of smaller negative numbers, which would give us bigger product at the end.
 // console.log(maximumProductSubarr([6, -3, -10, 0, 2])); // 180
 // console.log(maximumProductSubarr([-1, -3, -10, 0, 60])); // 60
-console.log(maximumProductSubarr([-7, -10, 0, 60])); // 60
+// console.log(maximumProductSubarr([-7, -10, 0, 60])); // 70
+
+/*
+Problem: Job Sequencing
+
+Given an array of jobs where every job has a deadline and associated profit if the job is finished before the deadline. It is also given that every job takes a single unit of time, so the minimum possible deadline for any job is 1. Maximize the total profit if only one job can be scheduled at a time.
+
+Input: Four Jobs with following deadlines and profits
+
+JobID  Deadline  Profit
+
+  a           4          20   
+  b           1          10
+  c           1          40  
+  d           1          30
+
+Output: Following is maximum profit sequence of jobs: c, a   
+
+Input:  Five Jobs with following deadlines and profits
+
+JobID   Deadline  Profit
+
+  a            2          100
+  b            1          19
+  c            2          27
+  d            1          25
+  e            3          15
+
+Output: Following is maximum profit sequence of jobs: c, a, e
+*/
+
+interface Job {
+  [key: string]: { deadline: number; profit: number };
+}
+
+const jobSequencing = (jobs: Job[]) => {
+  // sort jobs via profits in descending order
+  const sortedJobs = jobs.sort((a, b) => {
+    const profitA = a[Object.keys(a)[0]].profit;
+    const profitB = b[Object.keys(b)[0]].profit;
+    return profitB - profitA;
+  });
+
+  // let us create queue in which jobs will be placed based on their deadlines
+  const queue: Job[] = [];
+
+  for (const job of sortedJobs) {
+    const currentJobKey = Object.keys(job)[0];
+    // we subtract 1 there, because arrays start from 0. So if we put job with deadline 1 in slot 1, that would mean that our unit of time that we needed to execute our job has already passed.
+    let currentJobDeadline = job[currentJobKey].deadline - 1;
+    // now we need to check if slot in our queue is free
+    if (queue[currentJobDeadline] === undefined) {
+      // if it's indeed free, now we can put our job in that slot.
+      queue[currentJobDeadline] = job;
+    } else {
+      // If it's not free we need to check if any slots on the left side are free. We can do that because that will put jobs in the place with deadlines greater than the time they need to be executed.
+      // Of course we can do that only to slot with number 0, so that needs to be our stop condition
+      while (currentJobDeadline >= 0) {
+        // If slot is free then we can assign the job in that place, and move on to the next job
+        if (queue[currentJobDeadline] === undefined) {
+          queue[currentJobDeadline] = job;
+          break;
+        }
+        currentJobDeadline -= 1;
+      }
+    }
+  }
+
+  // create string for output
+  const idsOfSequencialJobs = queue
+    .map(job => {
+      if (job === undefined) return '';
+      const currentJobKey = Object.keys(job)[0];
+
+      return currentJobKey;
+    })
+    .join('')
+    .split('')
+    .join(', ');
+
+  return ` Following is maximum profit sequence of jobs ${idsOfSequencialJobs}`;
+};
+
+console.log(
+  jobSequencing([
+    { a: { deadline: 1, profit: 20 } },
+    { b: { deadline: 1, profit: 30 } },
+    { c: { deadline: 2, profit: 40 } },
+    { d: { deadline: 2, profit: 30 } },
+    { e: { deadline: 3, profit: 15 } },
+  ])
+);
