@@ -255,12 +255,58 @@ const jobSequencing = (jobs: Job[]) => {
   return ` Following is maximum profit sequence of jobs ${idsOfSequencialJobs}`;
 };
 
-console.log(
-  jobSequencing([
-    { a: { deadline: 1, profit: 20 } },
-    { b: { deadline: 1, profit: 30 } },
-    { c: { deadline: 2, profit: 40 } },
-    { d: { deadline: 2, profit: 30 } },
-    { e: { deadline: 3, profit: 15 } },
-  ])
-);
+// console.log(
+//   jobSequencing([
+//     { a: { deadline: 1, profit: 20 } },
+//     { b: { deadline: 1, profit: 30 } },
+//     { c: { deadline: 2, profit: 40 } },
+//     { d: { deadline: 2, profit: 30 } },
+//     { e: { deadline: 3, profit: 15 } },
+//   ])
+// );
+
+/*
+Problem:  Optimal Merge Problem 
+
+Explanation:
+In the given example, we have three sorted arrays: [2, 5, 8], [1, 3, 6, 9], and [4, 7]. Our task is to merge these arrays into a single sorted array with the minimum number of comparisons.
+
+Input:
+Arrays: [2, 5, 8], [1, 3, 6, 9], [4, 7]
+(Note: The arrays are already sorted)
+
+Output:
+Merged Array: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+(Number of comparisons: 14)
+
+*/
+
+const optimalMerge = (...arrays: number[][]) => {
+  const sortedArrays = [...arrays].sort((a, b) => a.length - b.length);
+
+  const mergedArrays: number[][] = [];
+  let currentMerged: number[] = [];
+  for (let i = 0; i < sortedArrays.length; i++) {
+    const currentArray = sortedArrays[i];
+    // we need to skip pushing to mergedArrays on our first iteration, because we didn't merge second array yet. It will prevent buggy calculations later on while calculating comparisons.
+    if (i === 0) {
+      currentMerged.push(...currentArray);
+      continue;
+    }
+    currentMerged.push(...currentArray);
+    // we push on every other iteration current merged arrays, just to calculate comparisons correctly
+    mergedArrays.push([...currentMerged]);
+  }
+  // calculate our comparisons by adding lengths of each of ours arrays we pushed on each iteration but first.
+  const comparisons = mergedArrays.reduce(
+    (accumulator, currArr) => currArr.length + accumulator,
+    0
+  );
+  // return final merged array and comparisons
+  const finalMerged = mergedArrays[mergedArrays.length - 1].sort(
+    (a, b) => a - b
+  );
+
+  return { merged: finalMerged, comparisons };
+};
+console.log(optimalMerge([2, 5, 8], [1, 3, 6, 9], [4, 7]));
