@@ -66,13 +66,3 @@ function binarySearch(numbers: number[], target: number): number | null {
   return binarySearchRecursive(numbers, target, 0, numbers.length - 1);
 }
 console.log(binarySearch([1, 2, 3, 4, 5], 6));
-
-/*
-binarySearch([1, 3, 5, 7, 9], 9);
-[1, 3, 5, 7, 9]
-        \ left 0 right 4 mid 2
-         \ left = mid+1 = 3 right 4 mid 3
-        [7,9]
-           \
-
-*/
