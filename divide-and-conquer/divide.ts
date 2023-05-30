@@ -65,4 +65,28 @@ function binarySearchRecursive(
 function binarySearch(numbers: number[], target: number): number | null {
   return binarySearchRecursive(numbers, target, 0, numbers.length - 1);
 }
-console.log(binarySearch([1, 2, 3, 4, 5], 6));
+// console.log(binarySearch([1, 2, 3, 4, 5], 6));
+
+/*
+Problem: Power Function
+Description: Implement a power function that calculates the result of raising a base number to a given exponent using the divide and conquer technique.
+
+Input: Base = 2, Exponent = 5
+Output: 32
+*/
+
+const power = (base: number, exponent: number): number => {
+  if (exponent === 0) {
+    return 1;
+  }
+
+  if (exponent % 2 === 0) {
+    const halfPower = power(base, exponent / 2);
+    return halfPower * halfPower;
+  } else {
+    const halfPower = power(base, Math.floor(exponent / 2));
+    return halfPower * halfPower * base;
+  }
+};
+
+console.log(power(2, 5));
