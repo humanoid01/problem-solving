@@ -90,3 +90,41 @@ const power = (base: number, exponent: number): number => {
 };
 
 console.log(power(2, 5));
+
+/*
+ Problem: Find Peak Element
+ Description: Given an array of integers, find a peak element. A peak element is an element that is greater than its adjacent neighbors (if they exist).
+ Input: Array = [1, 3, 5, 9, 7, 2]
+Output: 3 (index of the peak element 9)
+*/
+function findPeakElement(arr: number[]): number {
+  return searchPeakElement(arr, 0, arr.length - 1);
+}
+
+function searchPeakElement(arr: number[], left: number, right: number): number {
+  if (left === right) {
+    return left;
+  }
+
+  const mid = Math.floor((left + right) / 2);
+
+  if (arr[mid] > arr[mid + 1]) {
+    return searchPeakElement(arr, left, mid);
+  } else if (arr[mid] < arr[mid + 1]) {
+    return searchPeakElement(arr, mid + 1, right);
+  } else {
+    // Handle the case when arr[mid] is equal to arr[mid + 1]
+    // We need to search both left and right, and choose the side with a higher peak
+    const leftPeak = searchPeakElement(arr, left, mid);
+    const rightPeak = searchPeakElement(arr, mid + 1, right);
+
+    if (leftPeak === rightPeak) {
+      return leftPeak; // Both sides have the same peak, return either
+    } else {
+      // Choose the side with the higher peak
+      return arr[leftPeak] > arr[rightPeak] ? leftPeak : rightPeak;
+    }
+  }
+}
+
+console.log(findPeakElement([1, 3, 1, 1, 1, 1]));
